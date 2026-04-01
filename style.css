@@ -317,3 +317,33 @@ body {
   filter: blur(80px);
   z-index: -1;
 }
+#music-control {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  background: rgba(232, 100, 138, 0.4);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+#music-icon {
+  font-size: 26px;
+  filter: drop-shadow(0 0 5px white);
+}
+
+/* Animación cuando la música suena */
+@keyframes pulse-music {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 100, 138, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(232, 100, 138, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232, 100, 138, 0); }
+}
