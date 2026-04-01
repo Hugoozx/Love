@@ -702,3 +702,18 @@ requestAnimationFrame(animate);
 window.addEventListener('load', () => {
   setTimeout(escribirTexto, 1200);
 });
+function toggleMusic() {
+  const audio = document.getElementById('miMusica');
+  const btn = document.getElementById('music-control');
+  const icon = document.getElementById('music-icon');
+  
+  if (audio.paused) {
+    audio.play();
+    icon.innerText = '✨'; // Cambia a una estrellita o lo que quieras
+    btn.style.animation = 'pulse-music 2s infinite';
+  } else {
+    audio.pause();
+    icon.innerText = '🎵';
+    btn.style.animation = 'none';
+  }
+}
