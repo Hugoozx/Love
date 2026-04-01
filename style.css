@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+  --night-deep:   #0a0618;
+  --rose-vivid:   #e8648a;
+  --text-light:   #fce8f3;
+  --text-dim:     #d4b4d8;
+  --counter-glow: #ff9ec8;
+
+  --gap-sm:  clamp(10px, 2vw, 18px);
+  --gap-md:  clamp(16px, 3vw, 28px);
+  --gap-lg:  clamp(22px, 4vw, 40px);
+
+  --fs-xs: clamp(0.72rem, 1.5vw, 0.82rem);
+  --fs-sm: clamp(0.85rem, 1.8vw, 0.95rem);
+  --fs-md: clamp(1rem,    2.2vw, 1.15rem);
+  --fs-lg: clamp(1.1rem,  2.8vw, 1.4rem);
+}
+
+html { height: 100%; scroll-behavior: smooth; }
+
+body {
+  width: 100%;
+  min-height: 100%;
+  font-family: 'Lato', sans-serif;
+  background: var(--night-deep);
+  color: var(--text-light);
+  cursor: default;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* ===== FONDO (estrellas + luna dibujadas aquí) ===== */
+#starCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===== ESCENA ===== */
+.scene {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  gap: var(--gap-lg);
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 5vw, 60px);
+}
+
+/* ===== SECCIÓN ÁRBOL ===== */
+/* overflow:visible es CRÍTICO — sin esto las mariposas se recortan */
+.tree-section {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: stretch;
+  min-width: 0;
+
+  overflow: visible;
+  position: relative;
+
+  /* permite animaciones fuera del canvas */
+  isolation: isolate;
+}
+
+#treeCanvas {
+  cursor: crosshair;
+  display: block;
+
+  /* mejora rendimiento de animaciones */
+  will-change: transform;
+
+  /* evita saltos en móviles */
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== CONTENIDO ===== */
+.content-section {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--gap-md);
+  max-width: 440px;
+}
+
+/* ===== MENSAJE ===== */
+.message-box {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(244, 160, 181, 0.25);
+  border-radius: 20px;
+  padding: clamp(16px, 3vw, 26px) clamp(18px, 3.5vw, 28px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 4px 30px rgba(200, 100, 138, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+.message-box:hover {
+  box-shadow:
+    0 6px 40px rgba(200, 100, 138, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.message-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: var(--fs-md);
+  line-height: 1.7;
+  color: var(--text-light);
+  margin-bottom: clamp(10px, 2vw, 16px);
+  text-shadow: 0 0 24px rgba(244, 160, 181, 0.5);
+}
+
+/* ===== TYPEWRITER ===== */
+.typewriter-text {
+  /* La nueva fuente romántica */
+  font-family: 'Dancing Script', cursive; 
+  
+  /* Un poco más grande porque las fuentes cursivas suelen verse pequeñas */
+  font-size: clamp(1.2rem, 2.5vw, 1.4rem); 
+  
+  /* Color rosa suave pero legible */
+  color: #ffdae9; 
+  
+  line-height: 1.6;
+  font-weight: 400;
+  white-space: pre-wrap;
+  min-height: 1.7em;
+  
+  /* Sutil resplandor para que brille como las estrellas */
+  text-shadow: 0 0 10px rgba(232, 100, 138, 0.3);
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ===== POLLITOS (MEJORADOS) ===== */
+.bears {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px; /* Más espacio entre ellos para que no se amontonen */
+    padding-left: 6px;
+    margin-bottom: 15px;
+}
+
+.bear {
+    display: inline-block;
+    will-change: transform;
+    line-height: 1;
+    transform-origin: bottom center;
+    
+    /* EFECTO DE RELIEVE: Triple sombra para dar profundidad y brillo de "figura" */
+    filter: 
+        drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) /* Brillo en el borde */
+        drop-shadow(0 8px 18px rgba(232, 100, 138, 0.6)) /* Sombra suave en el suelo */
+        drop-shadow(0 0 5px rgba(255, 204, 221, 0.3)); /* Resplandor ambiental */
+}
+
+.bear-left {
+    /* Un poco más grandes que antes */
+    font-size: clamp(2.3rem, 5.5vw, 2.8rem); 
+    animation: bearSway 3s ease-in-out infinite;
+}
+
+.bear-right {
+    font-size: clamp(2.6rem, 6vw, 3.2rem); 
+    animation: bearSway 3.2s ease-in-out infinite reverse; /* Velocidad ligeramente distinta */
+}
+
+/* ANIMACIÓN MÁS TIERNA: Ahora tienen un pequeño "rebote" */
+@keyframes bearSway {
+    0%, 100% { 
+        transform: rotate(-4deg) translateY(0); 
+    }
+    50% { 
+        transform: rotate(4deg) translateY(-8px); /* Salto más pronunciado */
+    }
+}
+
+/* ===== CONTADOR ===== */
+.counter-box { text-align: left; }
+.counter-label {
+  font-weight: 300;
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.counter-time {
+  font-family: 'Playfair Display', serif;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--counter-glow);
+  letter-spacing: 0.02em;
+  animation: counterPulse 2s ease-in-out infinite;
+}
+@keyframes counterPulse {
+  0%, 100% { text-shadow: 0 0 12px rgba(255,158,200,0.6), 0 0 30px rgba(255,158,200,0.3); }
+  50%       { text-shadow: 0 0 20px rgba(255,158,200,0.9), 0 0 50px rgba(255,158,200,0.5); }
+}
+
+/* ===== EXPLOSIÓN ===== */
+#heartBurst {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  overflow: hidden;
+}
+.burst-heart {
+  position: absolute;
+  pointer-events: none;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  animation: burstFly 1.6s ease-out forwards;
+  will-change: transform, opacity;
+}
+@keyframes burstFly {
+  0%   { transform: translate(0,0) scale(0.5); opacity: 1; }
+  80%  { opacity: 0.9; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(1) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1199px) {
+  .content-section { max-width: 380px; }
+}
+@media (max-width: 899px) {
+  .scene { gap: var(--gap-md); padding: clamp(24px,4vw,40px) clamp(20px,4vw,40px); }
+  .content-section { max-width: 360px; }
+  .tree-section { max-width: 48%; }
+}
+@media (max-width: 699px) {
+  body { overflow-y: auto; }
+  .scene {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100dvh;
+    padding: 28px 18px 40px;
+    gap: var(--gap-md);
+  }
+  .tree-section {
+    width: 100%;
+    max-width: 380px;
+    align-self: center;
+    overflow: visible;
+  }
+  #treeCanvas { max-width: 100%; height: auto !important; }
+  .content-section {
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+    max-width: 100%;
+    width: 100%;
+    gap: var(--gap-sm);
+  }
+  .message-box { text-align: left; }
+  .counter-box, .counter-label { text-align: center; }
+  .bears { justify-content: center; padding-left: 0; }
+}
+@media (max-width: 380px) {
+  :root { --gap-sm: 10px; --gap-md: 14px; }
+  .message-box { padding: 14px 16px; }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .scene {
+    flex-direction: row;
+    min-height: 100dvh;
+    padding: 8px 16px;
+    gap: 16px;
+    overflow-y: auto;
+    align-items: center;
+  }
+  .tree-section {
+    flex: 0 0 auto;
+    width: 240px;
+    align-self: stretch;
+    max-width: 240px;
+    overflow: visible;
+  }
+  #treeCanvas { max-height: calc(100vh - 16px); width: auto !important; max-width: 240px; }
+  .content-section { align-items: flex-start; text-align: left; max-width: 380px; gap: 10px; }
+  .counter-box, .counter-label { text-align: left; }
+  .bears { padding-left: 4px; }
+}
+.scene::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+
+  background:
+    radial-gradient(circle at 70% 20%, rgba(255,150,200,0.12), transparent 50%),
+    radial-gradient(circle at 30% 80%, rgba(180,120,255,0.10), transparent 50%);
+
+  filter: blur(80px);
+  z-index: -1;
+}
